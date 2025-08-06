@@ -1,44 +1,18 @@
-# flyro
-Bayesian inference of fitness landscape architecture using Pyro.
+# flambée
+Fitness Lansdscape Architecture Models via Bayesian Estimation 
+
+(or what happens when you apply a bit of **pyro** to your dish...)
 
 ## Introduction
 Flyro is intended for fitting simple Bayesian probabilistic models to large mutational scanning datasets. For efficiency, it does so using stochastic variational inference (SVI) as implemented in the probabilistic programming package Pyro (https://pyro.ai/). It is intended to be both rigorously defined but very simple for non-experts to use.
 
-The difference between flyro and other approaches is that it is fundamentally Bayesian - that is, rather than simply maximizing the likelihood of the data given a model, we attempt to assess the probabilities of various model parameters, which requires us to explicitly write out our priors. The advantage of this approach is that rather than inferring a single "best" set of parameters, you infer a probability distribution over possible parameters given the model design that allows you to more robustly assess error.
+The difference between flyro and other approaches is that it is fundamentally Bayesian - that is, rather than simply maximizing the likelihood of the data given a model, we attempt to assess the probabilities of various model parameters, which requires us to explicitly write out our priors. The advantage of this approach is that rather than inferring a single "best" set of parameters, you infer a probability distribution over possible parameters given the model design that allows you to more robustly assess error. Other than this, what **flambée** can do is quite similar to other tools for fitting simple regression models to mutational scanning datasets such as MoCHI, MaveNN, or RFA (and I'm sure many others). However, there is some functionality that I have explicitly added to flambee that those other models do not have.
 
 ## Basic usage
 To fit a linear regression model, you can do the following:
 
-def sigmoid(X, y=None, y_err=None, sigma_prior=0.1, beta_prior_scale=2, a_prior_scale=0.5, a_prior_loc=1, k_prior_scale=1, k_prior_loc=0):
-
-    device = X.device
-    D = X.shape[1]
-
-    # Priors on individual mutation effects
-    beta = pyro.sample("beta", dist.Normal(torch.zeros(D, device=device), 
-                                           beta_prior_scale * torch.ones(D, device=device)).to_event(1))
-    # Additional priors
-    b0 = pyro.sample("b0", dist.Normal(torch.tensor(0., device=device), torch.tensor(beta_prior_scale, device=device)))
-    a = pyro.sample("a", dist.Normal(torch.tensor(a_prior_loc, device=device), torch.tensor(a_prior_scale, device=device)))
-    k = pyro.sample("k", dist.Normal(torch.tensor(k_prior_loc, device=device), torch.tensor(k_prior_scale, device=device)))
-    z = X @ beta + b0
-
-    mean = a * torch.sigmoid(z.clamp(-10, 10)) + k  
-
-    # Compute total standard deviation per data point
-    if sigma_prior is None:
-        sigma_m=0
-    else:
-        sigma_m = pyro.sample("sigma_m", dist.HalfNormal(sigma_prior))
-        
-    total_sigma = torch.sqrt(y_err**2 + sigma_m**2)
-
-    # Observed data likelihood (NOW inside pyro.plate)
-    with pyro.plate("data", X.shape[0]):  
-        pyro.sample("obs", dist.Normal(mean, total_sigma), obs=y)
-
 ```
-import flyro
+import flambee as bf
 X_train, y_train, y_err_train = make_tensors(X_train_df, ...)
 linear_model = flyro.LinearModel(features)
 linear_model.fit(X_train, y_train, y_err_train, 
