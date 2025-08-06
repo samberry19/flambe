@@ -1,4 +1,4 @@
-# flambée
+# flambé
 Fitness Lansdscape Architecture Models via Bayesian Estimation 
 
 (or what happens when you apply a bit of **pyro** to your dish...)
