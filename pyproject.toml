@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flambe"
+version = "0.1.0"
+authors = [
+  { name="Sam Berry", email="sberry@g.harvard.edu" },
+]
+description = "Bayesian inference of minimal fitness landscape architecture models from mutational scanning data"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["numpy ~ 1.25.0", "pandas ~ 2.2.3", "matplotlib", "pytorch ~ 1.6.0", "pyro==1.9.1", "scipy", "tqdm"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["flambe*"]
+
+[tool.isort]
+profile = "black"
+src_paths = "flambe"
+multi_line_output = 3
+
+[tool.pydocstyle]
+match_dir = "flambe"
+convention = "numpy"
+
+[project.urls]
+"Homepage" = "https://github.com/samberry19/flambe/"
+"Bug Tracker" = "https://github.com/samberry19/flambe/issues"
