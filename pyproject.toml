@@ -17,7 +17,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["numpy<2.0", "pandas", "matplotlib", "pytorch > 1.6", "pyro>1.9", "scipy", "tqdm"]
+dependencies = ["numpy<2.0", "pandas", "matplotlib", "pytorch", "pyro>1.9", "scipy", "tqdm"]
 
 [tool.setuptools.packages.find]
 where = ["."]
